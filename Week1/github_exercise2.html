@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Single Page Application-GitHub</title>
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" media="all" href="css/style.css" />
+  </head>
+
+  <body>
+    <script>
+      let xhr = new XMLHttpRequest(); // xhr will be de gateway to various properties and methods
+
+      xhr.open('GET', 'https://api.github.com/orgs/HackYourFuture/repos?per_page=100', true);
+      xhr.send();
+      //xhr.addEventListener('readystatechange', processRequest, false); // the readystatechange is listened and the processRequest is called, so that we can read the code when it is returned
+      xhr.onreadystatechange = processRequest;
+
+      function processRequest(e) {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+          //the goal is to read the returned value after our request has been completed (4 is the last value of the five stages. And that the http request was successful, therefore that we got all the readable data (200 means successful)
+          //console.log(xhr.getResponseHeader('Link').split(','));
+          let response = JSON.parse(xhr.responseText); // reading the value/raw data of the responseText and converting the JSON string into an actual JSON object.
+          //console.log(response);
+
+          //GET A LIST OF HYF REPOSITORIES
+          let reposNames = []; //create an empty array for the respos names list
+          for (let i = 0; i < response.length; i++) {
+            //loop over the response
+            reposNames.push(response[i].name); //push the name property to the array
+          }
+          console.log(reposNames);
+
+          // GET CONTRIBUTOR INFORMATION FOR A REPOSITORY
+          let contributorsInfo = []; // create an empty array for the contributors names list
+          for (let i = 0; i < response.length; i++) {
+            //loop over the response
+            contributorsInfo.push(response[i].contributors_url);
+          }
+          console.log(contributorsInfo);
+          //alert(response.ip); // displaying the IP
+        }
+      }
+    </script>
+  </body>
+</html>
